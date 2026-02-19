@@ -1,6 +1,9 @@
 import streamlit as st
 import requests
 from datetime import datetime
+import sys
+sys.path.append('..')
+from auth import require_auth, get_current_user, logout
 
 # ─── Page Config ───────────────────────────────────────────────
 st.set_page_config(
@@ -8,6 +11,18 @@ st.set_page_config(
     page_icon="💬",
     layout="wide"
 )
+
+# ─── Authentication Check ──────────────────────────────────────
+require_auth()
+current_user = get_current_user()
+
+# ─── Sidebar ───────────────────────────────────────────────────
+with st.sidebar:
+    st.markdown("### 👤 User Profile")
+    st.write(f"**{current_user['username']}**")
+    if st.button("🚪 Logout", use_container_width=True):
+        logout()
+        st.rerun()
 
 # ─── Gemini API Config ─────────────────────────────────────────
 GEMINI_API_KEY = "AIzaSyBO3qiLuaIDE4lN5tfOe78owEw6onp5ZmU"

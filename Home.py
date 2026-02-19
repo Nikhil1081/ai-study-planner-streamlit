@@ -1,4 +1,5 @@
 import streamlit as st
+from auth import show_auth_page, init_auth, logout, get_current_user
 
 # ─── Page Config ───────────────────────────────────────────────
 st.set_page_config(
@@ -7,6 +8,17 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# ─── Authentication Check ──────────────────────────────────────
+init_auth()
+
+# If not logged in, show auth page
+if not st.session_state.get('logged_in', False):
+    show_auth_page()
+    st.stop()
+
+# Get current user
+current_user = get_current_user()
 
 # ─── Custom CSS ────────────────────────────────────────────────
 st.markdown("""
@@ -50,6 +62,22 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
+# ─── Sidebar - User Info ───────────────────────────────────────
+with st.sidebar:
+    st.markdown("### 👤 User Profile")
+    st.write(f"**Username:** {current_user['username']}")
+    st.write(f"**Email:** {current_user['email']}")
+    st.write(f"**Member since:** {current_user['created_at'][:10]}")
+    
+    st.markdown("---")
+    
+    if st.button("🚪 Logout", use_container_width=True):
+        logout()
+        st.rerun()
+    
+    st.markdown("---")
+    st.info("💡 Use the pages menu above to navigate")
 
 # ─── Header ────────────────────────────────────────────────────
 st.markdown("""
