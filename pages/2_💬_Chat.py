@@ -229,7 +229,156 @@ Provide a helpful, encouraging, and informative response. Be specific and action
         st.rerun()
 
 with col2:
-    st.markdown("## 🎯 Study Categories")
+    st.markdown("## � Quick Planner")
+    
+    # Initialize education level in session state
+    if 'selected_education_level' not in st.session_state:
+        st.session_state.selected_education_level = "Class 10th"
+    
+    # Education level selector
+    education_levels = [
+        "📖 Class 10th",
+        "📘 Class 12th - Science",
+        "📙 Class 12th - Commerce", 
+        "📕 Class 12th - Arts",
+        "🎓 B.Tech - Computer Science",
+        "🎓 B.Tech - Electrical/Electronics",
+        "🎓 B.Tech - Mechanical",
+        "🎓 B.Tech - Civil",
+        "💼 MBA - All Streams",
+        "🎯 Competitive Exams (JEE/NEET)"
+    ]
+    
+    selected_level = st.selectbox(
+        "Select Your Level:",
+        options=education_levels,
+        key="education_level_select"
+    )
+    
+    st.markdown(f"### {selected_level}")
+    
+    # Quick planner actions
+    col_a, col_b = st.columns(2)
+    
+    with col_a:
+        if st.button("📅 Create Timetable", key="create_timetable", use_container_width=True):
+            st.session_state.chat_history.append({
+                'role': 'user',
+                'content': f"Create a detailed study timetable for {selected_level}",
+                'timestamp': datetime.now()
+            })
+            
+            prompt = f"""You are an AI Study Assistant. Create a comprehensive daily study timetable for a {selected_level} student.
+
+Include:
+1. Optimal study hours (morning, afternoon, evening)
+2. Subject allocation with time slots
+3. Break times and duration
+4. Revision sessions
+5. Tips specific to this education level
+6. Balanced schedule for weekdays and weekends
+
+Make it practical and easy to follow!"""
+            
+            with st.spinner("🤖 Creating your timetable..."):
+                response = call_gemini_api(prompt)
+            
+            st.session_state.chat_history.append({
+                'role': 'bot',
+                'content': response,
+                'timestamp': datetime.now()
+            })
+            
+            st.rerun()
+    
+    with col_b:
+        if st.button("📋 Study Planner", key="create_planner", use_container_width=True):
+            st.session_state.chat_history.append({
+                'role': 'user',
+                'content': f"Create a study plan for {selected_level}",
+                'timestamp': datetime.now()
+            })
+            
+            prompt = f"""You are an AI Study Assistant. Create a comprehensive study plan for a {selected_level} student.
+
+Include:
+1. Key subjects and topics to cover
+2. Week-by-week breakdown
+3. Important chapters/units priority
+4. Revision strategy
+5. Exam preparation timeline
+6. Study resources and techniques
+
+Make it detailed and motivating!"""
+            
+            with st.spinner("🤖 Preparing your study plan..."):
+                response = call_gemini_api(prompt)
+            
+            st.session_state.chat_history.append({
+                'role': 'bot',
+                'content': response,
+                'timestamp': datetime.now()
+            })
+            
+            st.rerun()
+    
+    # Quick subject help
+    st.markdown("#### 📚 Subject-Specific Help")
+    
+    subject_help_options = {
+        "Class 10th": ["Math", "Science", "Social Studies", "English"],
+        "Class 12th": ["Physics", "Chemistry", "Math", "Biology", "Economics", "Accounts"],
+        "B.Tech": ["Programming", "Data Structures", "DBMS", "Operating Systems"],
+        "MBA": ["Marketing", "Finance", "HR", "Operations"],
+        "Competitive": ["Quantitative Aptitude", "Reasoning", "General Knowledge"]
+    }
+    
+    # Determine subject category based on selected level
+    subject_category = "Class 10th"
+    if "12th" in selected_level:
+        subject_category = "Class 12th"
+    elif "B.Tech" in selected_level:
+        subject_category = "B.Tech"
+    elif "MBA" in selected_level:
+        subject_category = "MBA"
+    elif "Competitive" in selected_level:
+        subject_category = "Competitive"
+    
+    subjects = subject_help_options.get(subject_category, ["Math", "Science", "English"])
+    
+    for subject in subjects[:3]:  # Show first 3 subjects
+        if st.button(f"📖 {subject} Help", key=f"subject_{subject}", use_container_width=True):
+            st.session_state.chat_history.append({
+                'role': 'user',
+                'content': f"How to study {subject} effectively for {selected_level}?",
+                'timestamp': datetime.now()
+            })
+            
+            prompt = f"""You are an AI Study Assistant. Provide effective study strategies for {subject} specifically for {selected_level} students.
+
+Include:
+1. Key topics to focus on
+2. Best study methods for this subject
+3. Common mistakes to avoid
+4. Resource recommendations
+5. Practice tips
+6. Time management for this subject
+
+Be specific and practical!"""
+            
+            with st.spinner("🤖 Preparing subject guidance..."):
+                response = call_gemini_api(prompt)
+            
+            st.session_state.chat_history.append({
+                'role': 'bot',
+                'content': response,
+                'timestamp': datetime.now()
+            })
+            
+            st.rerun()
+    
+    st.markdown("---")
+    st.markdown("## �🎯 Study Categories")
     
     # Category-based recommendations
     categories = {
