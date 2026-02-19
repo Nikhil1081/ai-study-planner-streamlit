@@ -273,7 +273,7 @@ def show_auth_page():
         * { font-family: 'Poppins', sans-serif; }
         
         .stApp {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 20%, #001a1a 40%, #00152e 60%, #0a0a0a 80%, #000000 100%);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
         }
@@ -287,11 +287,12 @@ def show_auth_page():
         .main .block-container {
             max-width: 600px;
             padding: 2rem 1rem;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
             border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3), 0 0 40px rgba(0, 217, 255, 0.1);
             margin: 2rem auto;
+            border: 2px solid rgba(0, 217, 255, 0.4);
         }
         
         .auth-logo { text-align: center; margin-bottom: 2rem; }
@@ -299,6 +300,7 @@ def show_auth_page():
         .auth-logo-icon {
             font-size: 4rem;
             animation: pulse 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.6));
         }
         
         @keyframes pulse {
@@ -309,29 +311,31 @@ def show_auth_page():
         .auth-title {
             font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #000000 0%, #00d9ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin: 1rem 0 0.5rem 0;
+            filter: drop-shadow(0 2px 4px rgba(0, 217, 255, 0.3));
         }
         
         .auth-subtitle {
-            color: #6c757d;
+            color: #555555;
             font-size: 1rem;
             margin-bottom: 2rem;
         }
         
         .stTextInput>div>div>input {
             border-radius: 15px !important;
-            border: 2px solid #e9ecef !important;
+            border: 2px solid #e0e0e0 !important;
             padding: 0.8rem 1rem !important;
             font-size: 1rem !important;
             transition: all 0.3s ease !important;
+            background: white !important;
         }
         
         .stTextInput>div>div>input:focus {
-            border-color: #667eea !important;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+            border-color: #00d9ff !important;
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.2) !important;
         }
         
         .stButton>button {
@@ -339,19 +343,21 @@ def show_auth_page():
             padding: 0.8rem 2rem !important;
             font-size: 1.1rem !important;
             font-weight: 600 !important;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(135deg, #000000 0%, #00d9ff 100%) !important;
             color: white !important;
             border: none !important;
             transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4);
         }
         
         .stButton>button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+            box-shadow: 0 8px 30px rgba(0, 217, 255, 0.6) !important;
+            background: linear-gradient(135deg, #00b8d4 0%, #00ffea 100%) !important;
         }
         
         .success-msg {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            background: linear-gradient(135deg, #000000 0%, #00b8d4 100%);
             color: white;
             padding: 1rem;
             border-radius: 15px;
@@ -359,10 +365,12 @@ def show_auth_page():
             text-align: center;
             font-weight: 600;
             animation: slideIn 0.5s ease;
+            border: 2px solid #00d9ff;
+            box-shadow: 0 4px 20px rgba(0, 217, 255, 0.5);
         }
         
         .error-msg {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
             color: white;
             padding: 1rem;
             border-radius: 15px;
@@ -370,6 +378,8 @@ def show_auth_page():
             text-align: center;
             font-weight: 600;
             animation: shake 0.5s ease;
+            border: 2px solid #ff3366;
+            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3);
         }
         
         @keyframes slideIn {
@@ -408,11 +418,12 @@ def show_auth_page():
         }
         
         .info-box {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-            border-left: 4px solid #667eea;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.08) 0%, rgba(0, 184, 212, 0.08) 100%);
+            border-left: 4px solid #00d9ff;
             padding: 1rem;
             border-radius: 10px;
             margin: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 217, 255, 0.1);
         }
         
         .feature-item {

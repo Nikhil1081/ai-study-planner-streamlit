@@ -27,32 +27,72 @@ with st.sidebar:
 # ─── Custom CSS ────────────────────────────────────────────────
 st.markdown("""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+    
+    * { font-family: 'Poppins', sans-serif; }
+    
+    .stApp {
+        background: linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #001520 50%, #0a0a0a 75%, #000000 100%);
+    }
+    
     .dashboard-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #000000 0%, #00d9ff 100%);
         color: white;
-        padding: 2rem;
-        border-radius: 10px;
+        padding: 2.5rem;
+        border-radius: 15px;
         text-align: center;
         margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 217, 255, 0.4);
+        border: 2px solid rgba(0, 217, 255, 0.3);
     }
+    
     .metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #000000 0%, #00b8d4 100%);
         color: white;
         padding: 1.5rem;
-        border-radius: 10px;
+        border-radius: 12px;
         text-align: center;
         margin: 1rem 0;
+        box-shadow: 0 4px 20px rgba(0, 217, 255, 0.4);
+        border: 2px solid rgba(0, 217, 255, 0.2);
     }
+    
     .task-item {
         padding: 1rem;
         margin: 0.5rem 0;
-        border-radius: 8px;
-        border-left: 4px solid #667eea;
-        background: #f0f2f6;
+        border-radius: 10px;
+        border-left: 4px solid #00d9ff;
+        background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,240,240,0.95) 100%);
+        box-shadow: 0 2px 10px rgba(0, 217, 255, 0.15);
+        transition: all 0.3s ease;
     }
+    
+    .task-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+    }
+    
     .completed-task {
         opacity: 0.6;
         text-decoration: line-through;
+        border-left-color: #666666;
+    }
+    
+    .stButton>button {
+        background: linear-gradient(135deg, #000000 0%, #00d9ff 100%) !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.6rem 1.5rem !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4) !important;
+    }
+    
+    .stButton>button:hover {
+        background: linear-gradient(135deg, #00b8d4 0%, #00ffea 100%) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(0, 217, 255, 0.6) !important;
     }
 </style>
 """, unsafe_allow_html=True)

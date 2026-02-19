@@ -53,37 +53,74 @@ def call_gemini_api(prompt):
 # ─── Custom CSS ────────────────────────────────────────────────
 st.markdown("""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+    
+    * { font-family: 'Poppins', sans-serif; }
+    
+    .stApp {
+        background: linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #001520 50%, #0a0a0a 75%, #000000 100%);
+    }
+    
     .chat-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #000000 0%, #00d9ff 100%);
         color: white;
-        padding: 2rem;
-        border-radius: 10px;
+        padding: 2.5rem;
+        border-radius: 15px;
         text-align: center;
         margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 217, 255, 0.4);
+        border: 2px solid rgba(0, 217, 255, 0.3);
     }
+    
     .user-message {
-        background: #667eea;
+        background: linear-gradient(135deg, #000000 0%, #00d9ff 100%);
         color: white;
         padding: 1rem;
-        border-radius: 10px 10px 0 10px;
+        border-radius: 15px 15px 5px 15px;
         margin: 1rem 0;
         margin-left: 20%;
+        box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
     }
+    
     .bot-message {
-        background: #f0f2f6;
+        background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(240,240,240,0.98) 100%);
         padding: 1rem;
-        border-radius: 10px 10px 10px 0;
+        border-radius: 15px 15px 15px 5px;
         margin: 1rem 0;
         margin-right: 20%;
-        border-left: 4px solid #667eea;
+        border-left: 4px solid #00d9ff;
+        box-shadow: 0 4px 15px rgba(0, 217, 255, 0.2);
     }
-    .chat-container {
-        max-height: 500px;
-        overflow-y: auto;
+    
+    .category-card {
+        background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 184, 212, 0.1) 100%);
         padding: 1rem;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        background: white;
+        border-radius: 12px;
+        margin: 0.5rem 0;
+        border: 2px solid rgba(0, 217, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .category-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4);
+    }
+    
+    .stButton>button {
+        background: linear-gradient(135deg, #000000 0%, #00d9ff 100%) !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.6rem 1rem !important;
+        border-radius: 10px !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 10px rgba(0, 217, 255, 0.3) !important;
+    }
+    
+    .stButton>button:hover {
+        background: linear-gradient(135deg, #00b8d4 0%, #00ffea 100%) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 15px rgba(0, 217, 255, 0.5) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -192,17 +229,89 @@ Provide a helpful, encouraging, and informative response. Be specific and action
         st.rerun()
 
 with col2:
+    st.markdown("## 🎯 Study Categories")
+    
+    # Category-based recommendations
+    categories = {
+        "📚 Study Techniques": [
+            "Pomodoro Technique guide",
+            "Active recall strategies",
+            "Spaced repetition tips",
+            "Feynman technique explained"
+        ],
+        "⏰ Time Management": [
+            "Create effective timetable",
+            "Beat procrastination",
+            "Prioritize tasks",
+            "Balance study & breaks"
+        ],
+        "📝 Exam Preparation": [
+            "Last-minute revision tips",
+            "Manage exam anxiety",
+            "Practice test strategies",
+            "Improve answer writing"
+        ],
+        "💪 Motivation": [
+            "Stay motivated daily",
+            "Overcome study burnout",
+            "Set achievable goals",
+            "Build study habits"
+        ],
+        "🧠 Memory & Focus": [
+            "Boost concentration",
+            "Memory improvement tricks",
+            "Avoid distractions",
+            "Deep work techniques"
+        ]
+    }
+    
+    selected_category = st.selectbox(
+        "Choose a category:",
+        options=list(categories.keys()),
+        key="category_select"
+    )
+    
+    st.markdown(f"### {selected_category}")
+    
+    for recommendation in categories[selected_category]:
+        if st.button(f"💡 {recommendation}", key=recommendation, use_container_width=True):
+            st.session_state.chat_history.append({
+                'role': 'user',
+                'content': f"{recommendation} (from {selected_category})",
+                'timestamp': datetime.now()
+            })
+            
+            # Enhanced prompt with category context
+            prompt = f"""You are an AI Study Assistant. A student is asking about {recommendation} from the {selected_category} category.
+            
+Provide detailed, practical advice with:
+1. Clear explanation
+2. Step-by-step guide
+3. Real examples
+4. Common mistakes to avoid
+5. Quick action tips
+
+Make it engaging and actionable!"""
+            
+            with st.spinner("🤖 AI is preparing recommendations..."):
+                response = call_gemini_api(prompt)
+            
+            st.session_state.chat_history.append({
+                'role': 'bot',
+                'content': response,
+                'timestamp': datetime.now()
+            })
+            
+            st.rerun()
+    
+    st.markdown("---")
     st.markdown("## 💡 Quick Topics")
     
     quick_questions = [
         "📝 How to make effective notes?",
         "🧠 Best memory techniques",
         "⏰ Create a study timetable",
-        "😴 Deal with exam stress",
-        "📊 Improve focus and concentration",
-        "🎯 Set study goals",
-        "📚 Active recall techniques",
-        "✍️ Exam preparation tips"
+        "😴 Deal with exam stress"
     ]
     
     for question in quick_questions:

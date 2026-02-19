@@ -53,21 +53,40 @@ def call_gemini_api(prompt):
 # ─── Custom CSS ────────────────────────────────────────────────
 st.markdown("""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+    
+    * { font-family: 'Poppins', sans-serif; }
+    
+    .stApp {
+        background: linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #001520 50%, #0a0a0a 75%, #000000 100%);
+    }
+    
     .plan-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #000000 0%, #00d9ff 100%);
         color: white;
-        padding: 2rem;
-        border-radius: 10px;
+        padding: 2.5rem;
+        border-radius: 15px;
         text-align: center;
         margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 217, 255, 0.4);
+        border: 2px solid rgba(0, 217, 255, 0.3);
     }
+    
     .stButton>button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 0.75rem 2rem;
-        border-radius: 8px;
-        font-weight: 600;
+        background: linear-gradient(135deg, #000000 0%, #00d9ff 100%) !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 2rem !important;
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4) !important;
+    }
+    
+    .stButton>button:hover {
+        background: linear-gradient(135deg, #00b8d4 0%, #00ffea 100%) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 25px rgba(0, 217, 255, 0.6) !important;
     }
 </style>
 """, unsafe_allow_html=True)
