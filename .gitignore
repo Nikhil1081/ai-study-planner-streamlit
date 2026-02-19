@@ -49,5 +49,8 @@ ENV/
 # Logs
 *.log
 
+# API Keys - NEVER COMMIT!
+config.py
+
 # OS
 Thumbs.db

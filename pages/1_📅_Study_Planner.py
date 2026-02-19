@@ -5,6 +5,16 @@ import sys
 sys.path.append('..')
 from auth import require_auth, get_current_user, logout
 
+# Import API key - try Streamlit secrets first (for deployment), then config file (for local)
+try:
+    GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+except:
+    try:
+        from config import GEMINI_API_KEY
+    except ImportError:
+        st.error("⚠️ Config file missing! Please create config.py with your API key. See config_example.py for template.")
+        st.stop()
+
 # ─── Page Config ───────────────────────────────────────────────
 st.set_page_config(
     page_title="Study Planner",
@@ -25,11 +35,10 @@ with st.sidebar:
         st.rerun()
 
 # ─── Gemini API Config ─────────────────────────────────────────
-GEMINI_API_KEY = "AIzaSyBO3qiLuaIDE4lN5tfOe78owEw6onp5ZmU"
 GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_API_KEY}"
 
 def call_gemini_api(prompt):
-    """Call Gemini API with given prompt"""
+    """Call Gemini API with given prompt and proper error handling"""
     try:
         payload = {
             "contents": [
@@ -38,17 +47,74 @@ def call_gemini_api(prompt):
                         {"text": prompt}
                     ]
                 }
-            ]
+            ],
+            "safetySettings": [
+                {
+                    "category": "HARM_CATEGORY_HARASSMENT",
+                    "threshold": "BLOCK_NONE"
+                },
+                {
+                    "category": "HARM_CATEGORY_HATE_SPEECH",
+                    "threshold": "BLOCK_NONE"
+                },
+                {
+                    "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                    "threshold": "BLOCK_NONE"
+                },
+                {
+                    "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                    "threshold": "BLOCK_NONE"
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.7,
+                "topK": 40,
+                "topP": 0.95,
+                "maxOutputTokens": 2048
+            }
         }
-        response = requests.post(GEMINI_API_URL, json=payload, timeout=30)
+        
+        response = requests.post(GEMINI_API_URL, json=payload, timeout=45)
         
         if response.status_code == 200:
             data = response.json()
-            return data.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+            
+            # Check if response has candidates
+            if 'candidates' in data and len(data['candidates']) > 0:
+                candidate = data['candidates'][0]
+                
+                # Check for content
+                if 'content' in candidate and 'parts' in candidate['content']:
+                    text = candidate['content']['parts'][0].get('text', '')
+                    if text:
+                        return text
+                
+                # Check if blocked by safety
+                if 'finishReason' in candidate:
+                    if candidate['finishReason'] == 'SAFETY':
+                        return "⚠️ Response blocked by safety filters. Please rephrase your request."
+                    elif candidate['finishReason'] == 'RECITATION':
+                        return "⚠️ Response blocked due to recitation. Please try a different query."
+            
+            return "⚠️ Unable to generate response. Please try again with different wording."
+            
+        elif response.status_code == 429:
+            return "⚠️ API rate limit reached. Please wait a moment and try again."
+        elif response.status_code == 403:
+            return "⚠️ API access denied. This might be due to quota limits or API key issues. Please try again later or check your API configuration."
+        elif response.status_code == 400:
+            error_data = response.json()
+            error_msg = error_data.get('error', {}).get('message', 'Invalid request')
+            return f"⚠️ Invalid request: {error_msg}. Please try rephrasing your question."
         else:
-            return f"Error: {response.status_code} - {response.text[:200]}"
+            return f"⚠️ API Error {response.status_code}. Please try again."
+            
+    except requests.exceptions.Timeout:
+        return "⚠️ Request timed out. Please try again."
+    except requests.exceptions.ConnectionError:
+        return "⚠️ Connection error. Please check your internet connection."
     except Exception as e:
-        return f"Error calling API: {str(e)}"
+        return f"⚠️ Unexpected error: {str(e)}. Please try again."
 
 # ─── Custom CSS ────────────────────────────────────────────────
 st.markdown("""
